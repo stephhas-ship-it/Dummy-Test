@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glassmorphism Calculator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #1e1e24; /* Dark modern background fallback */
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Gradients & Blobs */
+        .color {
+            position: absolute;
+            filter: blur(150px);
+        }
+        .color:nth-child(1) {
+            top: -350px;
+            width: 600px;
+            height: 600px;
+            background: #ff359b;
+        }
+        .color:nth-child(2) {
+            bottom: -150px;
+            left: 100px;
+            width: 500px;
+            height: 500px;
+            background: #fffd87;
+        }
+        .color:nth-child(3) {
+            bottom: 50px;
+            right: 100px;
+            width: 300px;
+            height: 300px;
+            background: #00d2ff;
+        }
+
+        /* Glassmorphism Calculator Container */
+        .calculator {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05); /* very light */
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+            width: 380px;
+            padding: 25px;
+            z-index: 10;
+        }
+
+        .display {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .display input {
+            width: 100%;
+            padding: 15px 10px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 40px;
+            text-align: right;
+            color: #fff;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        /* Calculator Buttons Grid */
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .btn {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #fff;
+            cursor: pointer;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Specific Button Styles */
+        .btn.operator {
+            background: rgba(255, 255, 255, 0.1);
+            color: #00d2ff;
+            font-weight: 500;
+        }
+
+        .btn.clear {
+            color: #ff359b;
+        }
+
+        .btn.equal {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            grid-row: span 2;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn.zero {
+            grid-column: span 2;
+            padding-left: 20px;
+            justify-content: flex-start;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="color"></div>
+    <div class="color"></div>
+    <div class="color"></div>
+
+    <div class="calculator">
+        <div class="display">
+            <input type="text" id="display" readonly placeholder="0" />
+        </div>
+        <div class="buttons">
+            <div class="btn clear" onclick="clearDisplay()">C</div>
+            <div class="btn operator" onclick="appendOperator('/')">÷</div>
+            <div class="btn operator" onclick="appendOperator('*')">×</div>
+            <div class="btn operator" onclick="backspace()">⌫</div>
+
+            <div class="btn" onclick="appendNumber('7')">7</div>
+            <div class="btn" onclick="appendNumber('8')">8</div>
+            <div class="btn" onclick="appendNumber('9')">9</div>
+            <div class="btn operator" onclick="appendOperator('-')">-</div>
+
+            <div class="btn" onclick="appendNumber('4')">4</div>
+            <div class="btn" onclick="appendNumber('5')">5</div>
+            <div class="btn" onclick="appendNumber('6')">6</div>
+            <div class="btn operator" onclick="appendOperator('+')">+</div>
+
+            <div class="btn" onclick="appendNumber('1')">1</div>
+            <div class="btn" onclick="appendNumber('2')">2</div>
+            <div class="btn" onclick="appendNumber('3')">3</div>
+            <div class="btn equal" onclick="calculate()">=</div>
+
+            <div class="btn zero" onclick="appendNumber('0')">0</div>
+            <div class="btn" onclick="appendNumber('.')">.</div>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+        let currentInput = '';
+        let operatorClicked = false;
+
+        function updateDisplay(value) {
+            // Keep display length inside container bounds ideally, simplest fallback here
+            if (value === '' || value === undefined || value === null) {
+                display.value = '0';
+            } else {
+                display.value = value;
+            }
+        }
+
+        function appendNumber(num) {
+            if (operatorClicked && currentInput.match(/[+\-*/]$/)) {
+                // Allows us to just build the expression purely
+            }
+            operatorClicked = false;
+            
+            // basic guard for leading zeros
+            if (currentInput === '0' && num !== '.') {
+                currentInput = num;
+            } else {
+                currentInput += num;
+            }
+            updateDisplay(currentInput);
+        }
+
+        function appendOperator(op) {
+            if(currentInput === '' && op === '-') {
+                currentInput += op;
+                updateDisplay(currentInput);
+                return;
+            }
+            if (currentInput === '') return;
+
+            // If the last character is an operator, replace it
+            if (/[+\-*/.]$/.test(currentInput)) {
+                currentInput = currentInput.slice(0, -1) + op;
+            } else {
+                currentInput += op;
+            }
+            operatorClicked = true;
+            updateDisplay(currentInput);
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            updateDisplay('');
+        }
+
+        function backspace() {
+            currentInput = currentInput.toString().slice(0, -1);
+            updateDisplay(currentInput);
+        }
+
+        function calculate() {
+            if (currentInput === '' || /[+\-*/.]$/.test(currentInput)) return;
+
+            try {
+                // Using Function instead of eval for slight safety or just stick to simple string eval
+                // eval is dangerous but for a local calculator with only numbers allowed it's ok
+                // More precise approach to parse and evaluate without eval: Let's use eval for simplicity here 
+                // but sanitize the input implicitly via UI restriction and validating text
+                
+                // sanitize
+                const sanitizedInput = currentInput.replace(/[^0-9+\-*/.]/g, '');
+                
+                if (sanitizedInput) {
+                    const result = new Function('return ' + sanitizedInput)();
+                    // round to handle floating point issues
+                    currentInput = Math.round(result * 100000000) / 100000000;
+                    currentInput = currentInput.toString();
+                    updateDisplay(currentInput);
+                }
+            } catch (error) {
+                updateDisplay('Error');
+                setTimeout(() => clearDisplay(), 1500);
+            }
+        }
+
+        // Add keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key >= '0' && e.key <= '9' || e.key === '.') {
+                appendNumber(e.key);
+            } else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
+                appendOperator(e.key);
+            } else if (e.key === 'Enter' || e.key === '=') {
+                calculate();
+            } else if (e.key === 'Backspace') {
+                backspace();
+            } else if (e.key === 'Escape') {
+                clearDisplay();
+            }
+        });
+    </script>
+</body>
+</html>
