@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+.calculator-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #1e1e24; /* Dark modern background fallback */
+    overflow: hidden;
+    position: relative;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100vw;
+}
+
+/* Replicate universal sizing for descendants */
+.calculator-wrapper *, .calculator-wrapper *::before, .calculator-wrapper *::after {
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Animated Background Gradients & Blobs */
+.calculator-wrapper .color {
+    position: absolute;
+    filter: blur(150px);
+}
+.calculator-wrapper .color:nth-child(1) {
+    top: -350px;
+    width: 600px;
+    height: 600px;
+    background: #ff359b;
+}
+.calculator-wrapper .color:nth-child(2) {
+    bottom: -150px;
+    left: 100px;
+    width: 500px;
+    height: 500px;
+    background: #fffd87;
+}
+.calculator-wrapper .color:nth-child(3) {
+    bottom: 50px;
+    right: 100px;
+    width: 300px;
+    height: 300px;
+    background: #00d2ff;
+}
+
+/* Glassmorphism Calculator Container */
+.calculator-wrapper .calculator {
+    position: relative;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+    width: 380px;
+    padding: 25px;
+    z-index: 10;
+}
+
+.calculator-wrapper .display {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.calculator-wrapper .display input {
+    width: 100%;
+    padding: 15px 10px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 40px;
+    text-align: right;
+    color: #fff;
+    letter-spacing: 2px;
+    font-weight: 500;
+}
+
+/* Calculator Buttons Grid */
+.calculator-wrapper .buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.calculator-wrapper .btn {
+    position: relative;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: #fff;
+    cursor: pointer;
+    padding: 20px 0;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.calculator-wrapper .btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.calculator-wrapper .btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Specific Button Styles */
+.calculator-wrapper .btn.operator {
+    background: rgba(255, 255, 255, 0.1);
+    color: #00d2ff;
+    font-weight: 500;
+}
+
+.calculator-wrapper .btn.clear {
+    color: #ff359b;
+}
+
+.calculator-wrapper .btn.equal {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    grid-row: span 2;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.calculator-wrapper .btn.zero {
+    grid-column: span 2;
+    padding-left: 20px;
+    justify-content: flex-start;
+}

@@ -1,0 +1,29 @@
+{
+  "name": "dummy-test",
+  "version": "1.0.0",
+  "description": "This is test purpose",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite --host"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stephhas-ship-it/Dummy-Test.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/stephhas-ship-it/Dummy-Test/issues"
+  },
+  "homepage": "https://github.com/stephhas-ship-it/Dummy-Test#readme",
+  "devDependencies": {
+    "vite": "^8.0.3"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^6.0.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  }
+}
